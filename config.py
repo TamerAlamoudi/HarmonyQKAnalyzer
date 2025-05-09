@@ -1,21 +1,27 @@
 # config.py
 """
-Configuration settings for the DissectingViT project.
+Configuration settings for the HarmonyQKAnalyzer project.
 """
 import os
-
 import torch
 
 # Paths
-BASE_DIR = "/Users/tamer/research"
+BASE_DIR = "/opt/scratch/labs/oxs/vit_2023/tamer/HarmonyQKAnalyzer"
+BASE_DIR_VAL= "/opt/labs/oxs/vit_2023"
 DATA_PATH = os.path.join(BASE_DIR, "results/DissectingVitWithImagenette/data_test")
 FIGURE_PATH = os.path.join(BASE_DIR, "results/DissectingVitWithImagenette/figure_test")
 LOGS_PATH = os.path.join(BASE_DIR, "results/DissectingVitWithImagenette/logs")
-IMAGENET_VAL_PATH = os.path.join(BASE_DIR, "datasets/imagenette2/val/")
+BASE_DIR_VAL = "/opt/labs/oxs/vit_2023"
+# IMAGENET_VAL_PATH = os.path.join(BASE_DIR_VAL, "visualization")
+# IMAGENET_LIST_PATH = os.path.join(IMAGENET_VAL_PATH, "imagenet_list_val.pkl")
+# Update the actual path to the ImageNet validation images
+IMAGENET_VAL_PATH = "/opt/labs/oxs/vit_2023/ImageNet1k/ILSVRC/Data/CLS-LOC/val"
+# Keep the path to the pickle file as is
+IMAGENET_LIST_PATH = "/opt/labs/oxs/vit_2023/visualization/imagenet_list_val.pkl"
 
 # Device configuration
-DEVICE = "cpu"  # Change to 'cuda' or 'mps' if available
-USE_GPU = False  # Set to True to use GPU if available
+DEVICE = 'cuda:0'  # Change to 'cuda' or 'mps' if available
+USE_GPU = True  # Set to True to use GPU if available
 
 # Default model configuration
 DEFAULT_MODELS = [
@@ -37,18 +43,16 @@ DEFAULT_MODELS = [
 # Create required directories
 for path in [DATA_PATH, FIGURE_PATH, LOGS_PATH]:
     os.makedirs(path, exist_ok=True)
-
-
+    
 # Function to get device based on availability
 def get_device() -> torch.device:
     """Get the best available device."""
     if USE_GPU:
         if torch.cuda.is_available():
-            return torch.device("cuda")
-        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-            return torch.device("mps")
-    return torch.device("cpu")
-
+            return torch.device('cuda')
+        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            return torch.device('mps')
+    return torch.device('cpu')
 
 # Initialize device
 DEVICE = get_device()
